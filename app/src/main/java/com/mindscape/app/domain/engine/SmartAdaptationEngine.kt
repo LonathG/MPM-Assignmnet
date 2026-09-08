@@ -11,7 +11,9 @@ data class AdaptationResult(
     val adjustedHabitCount: Int
 )
 
-class SmartAdaptationEngine {
+class SmartAdaptationEngine(
+    private val mlEngine: HabitAdaptationEngine? = null
+) {
 
     fun adaptHabitsForCheckIn(
         habits: List<Habit>,
@@ -64,16 +66,34 @@ class SmartAdaptationEngine {
         val mood = checkIn.moodScore
         val energy = checkIn.energyLevel
 
-        // If mood is Stormy/Rainy (1-2) or Energy is Low
+        // If ML engine is available, use ML model prediction
+        if (mlEngine != null) {
+            val predictedClass = mlEngine.predict(energy, mood, original)
+            return when (predictedClass) {
+                HabitAdaptationEngine.CLASS_LIGHT -> {
+                    val downscaled = max(1, (original * 0.33f).toInt())
+                    val reason = "Smart ML Adaptation: Reduced to $downscaled ${habit.targetUnit} based on your ${checkIn.moodLabel} mood and ${energy.displayName} energy."
+                    Triple(downscaled, downscaled < original, reason)
+                }
+                HabitAdaptationEngine.CLASS_MODERATE -> {
+                    val downscaled = max(1, (original * 0.5f).toInt())
+                    val reason = "Smart ML Adaptation: Adjusted to $downscaled ${habit.targetUnit} to match your daily capacity."
+                    Triple(downscaled, downscaled < original, reason)
+                }
+                else -> {
+                    Triple(original, false, null)
+                }
+            }
+        }
+
+        // Rule-based fallback if ML engine is not provided
         if (mood <= 2 || energy == EnergyLevel.LOW) {
             val downscaled = max(1, (original * 0.33f).toInt())
             if (downscaled < original) {
                 val reason = "Since you're feeling '${checkIn.moodLabel}', we reduced this from $original ${habit.targetUnit} to keep it manageable today."
                 return Triple(downscaled, true, reason)
             }
-        }
-        // If mood is Okay (3) or Energy is Medium
-        else if (mood == 3) {
+        } else if (mood == 3) {
             val downscaled = max(1, (original * 0.5f).toInt())
             if (downscaled < original) {
                 val reason = "Since you're feeling 'Okay', we reduced this from $original ${habit.targetUnit} to keep it manageable today."

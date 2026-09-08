@@ -18,6 +18,7 @@ import com.mindscape.app.data.local.database.MindScapeDatabase
 import com.mindscape.app.data.repository.CheckInRepositoryImpl
 import com.mindscape.app.data.repository.HabitRepositoryImpl
 import com.mindscape.app.data.repository.UserProfileRepositoryImpl
+import com.mindscape.app.domain.engine.HabitAdaptationEngine
 import com.mindscape.app.domain.engine.SmartAdaptationEngine
 import com.mindscape.app.domain.usecase.GetAnalyticsUseCase
 import com.mindscape.app.domain.usecase.ManageHabitsUseCase
@@ -44,13 +45,15 @@ class MainActivity : ComponentActivity() {
         val checkInRepository = CheckInRepositoryImpl(database.dailyCheckInDao())
         val userProfileRepository = UserProfileRepositoryImpl(database.userProfileDao())
 
-        // Initialize Domain Use Cases
+        // Initialize ML Engine & Domain Use Cases
+        val mlEngine = HabitAdaptationEngine(applicationContext)
+        val smartAdaptationEngine = SmartAdaptationEngine(mlEngine)
         val manageHabitsUseCase = ManageHabitsUseCase(habitRepository)
         val performCheckInUseCase = PerformCheckInUseCase(
             checkInRepository = checkInRepository,
             habitRepository = habitRepository,
             userProfileRepository = userProfileRepository,
-            adaptationEngine = SmartAdaptationEngine()
+            adaptationEngine = smartAdaptationEngine
         )
         val getAnalyticsUseCase = GetAnalyticsUseCase(
             habitRepository = habitRepository,
