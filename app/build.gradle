@@ -46,6 +46,9 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+        jniLibs {
+            useLegacyPackaging = false
+        }
     }
     aaptOptions {
         noCompress 'tflite'
@@ -73,9 +76,9 @@ dependencies {
     implementation "androidx.room:room-ktx:$roomVersion"
     ksp "androidx.room:room-compiler:$roomVersion"
 
-    // TensorFlow Lite
-    implementation 'org.tensorflow:tensorflow-lite:2.14.0'
-    implementation 'org.tensorflow:tensorflow-lite-support:0.4.4'
+    // TensorFlow Lite (LiteRT - 16 KB page size compatible, fully offline on-device)
+    implementation 'com.google.ai.edge.litert:litert:1.0.1'
+    implementation 'com.google.ai.edge.litert:litert-support:1.0.1'
 
     // Gson for JSON type converters
     implementation 'com.google.code.gson:gson:2.10.1'
