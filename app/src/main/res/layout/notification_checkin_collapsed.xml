@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@color/mind_background"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp">
+
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="MindScape"
+        android:src="@drawable/ic_notif_star" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Energy &amp; Mood Check-In"
+            android:textColor="@color/mind_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take 10s to log your mood &amp; energy"
+            android:textColor="@color/mind_text_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btn_collapsed_quick_log"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:background="@drawable/bg_btn_log"
+        android:gravity="center"
+        android:paddingHorizontal="14dp"
+        android:text="Check In"
+        android:textColor="@color/mind_white"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

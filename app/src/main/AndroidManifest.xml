@@ -2,11 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Notification Permission (Android 13+ / API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:label="MindScape"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.NoActionBar">
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -16,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Offline BroadcastReceiver for Rich Interactive Notification Actions (FR-02 & FR-05) -->
+        <receiver
+            android:name=".notification.CheckInNotificationReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>

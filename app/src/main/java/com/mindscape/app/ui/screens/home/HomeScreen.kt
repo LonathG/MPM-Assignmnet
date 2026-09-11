@@ -22,6 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mindscape.app.domain.model.Habit
 import com.mindscape.app.ui.screens.checkin.WeatherIconItem
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import com.mindscape.app.notification.CheckInNotificationManager
 import com.mindscape.app.ui.theme.*
 import com.mindscape.app.ui.viewmodel.CalendarDay
 import com.mindscape.app.ui.viewmodel.HomeViewModel
@@ -33,6 +38,31 @@ fun HomeScreen(
     onNavigateToProfile: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            CheckInNotificationManager.showCheckInNotification(context)
+        }
+    }
+
+    fun triggerNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionCheck = androidx.core.content.ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
+            if (permissionCheck == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                CheckInNotificationManager.showCheckInNotification(context)
+            } else {
+                notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        } else {
+            CheckInNotificationManager.showCheckInNotification(context)
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -64,13 +94,13 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = {},
+                        onClick = { triggerNotification() },
                         modifier = Modifier
                             .size(42.dp)
                             .clip(CircleShape)
                             .background(MindCardSurface)
                     ) {
-                        Icon(Icons.Outlined.Notifications, contentDescription = "Notifications", tint = MindTextPrimary)
+                        Icon(Icons.Outlined.Notifications, contentDescription = "Trigger Check-In Notification", tint = MindPrimaryAccent)
                     }
 
                     // Avatar Thumbnail

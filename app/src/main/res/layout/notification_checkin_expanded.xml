@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notif_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mind_background"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Top App Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:contentDescription="MindScape"
+            android:src="@drawable/ic_notif_star" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="MindScape  •  Just now"
+            android:textColor="@color/mind_text_primary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:contentDescription="Collapse"
+            android:src="@drawable/ic_notif_expand" />
+    </LinearLayout>
+
+    <!-- Title & Subtitle -->
+    <TextView
+        android:id="@+id/tv_notif_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Energy &amp; Mood Check-In"
+        android:textColor="@color/mind_text_primary"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_notif_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Take 10 seconds to tune into yourself. How does your body feel?"
+        android:textColor="@color/mind_text_secondary"
+        android:textSize="12sp" />
+
+    <!-- CARD 1: MOOD STATE (30% Structural Frame) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_notif_card"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:letterSpacing="0.05"
+                android:text="MOOD STATE"
+                android:textColor="@color/mind_text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_selected_mood_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Good"
+                android:textColor="@color/mind_primary_accent"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 5 Mood Interactive Columns -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <!-- Mood 1: Drained -->
+            <LinearLayout
+                android:id="@+id/btn_mood_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_mood_unselected"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="😔"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tv_mood_name_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Drained"
+                    android:textColor="@color/mind_text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Mood 2: Low -->
+            <LinearLayout
+                android:id="@+id/btn_mood_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_mood_unselected"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🥱"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tv_mood_name_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Low"
+                    android:textColor="@color/mind_text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Mood 3: Balanced -->
+            <LinearLayout
+                android:id="@+id/btn_mood_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_mood_unselected"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="😌"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tv_mood_name_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Balanced"
+                    android:textColor="@color/mind_text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Mood 4: Good (Selected by default) -->
+            <LinearLayout
+                android:id="@+id/btn_mood_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_mood_selected"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="😊"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tv_mood_name_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Good"
+                    android:textColor="@color/mind_primary_accent"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Mood 5: Thriving -->
+            <LinearLayout
+                android:id="@+id/btn_mood_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_mood_unselected"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tv_mood_name_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Thriving"
+                    android:textColor="@color/mind_text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- CARD 2: PHYSICAL ENERGY (30% Structural Frame) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_notif_card"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:letterSpacing="0.05"
+                android:text="PHYSICAL ENERGY"
+                android:textColor="@color/mind_text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginEnd="4dp"
+                android:contentDescription="Energy"
+                android:src="@drawable/ic_notif_bolt" />
+
+            <TextView
+                android:id="@+id/tv_selected_energy_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Level 4 • Energized"
+                android:textColor="@color/mind_primary_accent"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 5 Level Interactive Slider / Buttons Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btn_energy_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical|start"
+                android:text="1 • Exhausted"
+                android:textColor="@color/mind_text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btn_energy_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@color/mind_text_muted"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/btn_energy_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@color/mind_text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <!-- Level 4 Indicator Thumb -->
+            <FrameLayout
+                android:id="@+id/btn_energy_4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/iv_energy_thumb"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bg_energy_thumb" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/btn_energy_5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical|end"
+                android:text="5 • Vibrant"
+                android:textColor="@color/mind_text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- BOTTOM ACTIONS ROW -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- Later Button -->
+        <TextView
+            android:id="@+id/btn_action_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:text="Later"
+            android:textColor="@color/mind_text_secondary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Mic Button -->
+        <ImageView
+            android:id="@+id/btn_action_mic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_btn_circle"
+            android:clickable="true"
+            android:contentDescription="Voice Note"
+            android:focusable="true"
+            android:padding="9dp"
+            android:src="@drawable/ic_notif_mic" />
+
+        <!-- Log Check-In Button (10% Focus Accent) -->
+        <LinearLayout
+            android:id="@+id/btn_action_log"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_btn_log"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log Check-In"
+                android:textColor="@color/mind_white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="6dp"
+                android:contentDescription="Confirm"
+                android:src="@drawable/ic_notif_check" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
