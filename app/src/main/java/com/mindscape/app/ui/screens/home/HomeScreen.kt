@@ -56,11 +56,13 @@ fun HomeScreen(
             )
             if (permissionCheck == android.content.pm.PackageManager.PERMISSION_GRANTED) {
                 CheckInNotificationManager.showCheckInNotification(context)
+                android.widget.Toast.makeText(context, "Check-in card sent to notification shade! Swipe down to view.", android.widget.Toast.LENGTH_SHORT).show()
             } else {
                 notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         } else {
             CheckInNotificationManager.showCheckInNotification(context)
+            android.widget.Toast.makeText(context, "Check-in card sent to notification shade! Swipe down to view.", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 

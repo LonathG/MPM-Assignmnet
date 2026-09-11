@@ -7,42 +7,11 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Top App Header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:contentDescription="MindScape"
-            android:src="@drawable/ic_notif_star" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="MindScape  •  Just now"
-            android:textColor="@color/mind_text_primary"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:contentDescription="Collapse"
-            android:src="@drawable/ic_notif_expand" />
-    </LinearLayout>
-
     <!-- Title & Subtitle -->
     <TextView
         android:id="@+id/tv_notif_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Energy &amp; Mood Check-In"
         android:textColor="@color/mind_text_primary"
         android:textSize="17sp"
@@ -110,7 +79,8 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="6dp">
+                android:paddingHorizontal="2dp"
+                android:paddingVertical="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -120,12 +90,14 @@
 
                 <TextView
                     android:id="@+id/tv_mood_name_1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:maxLines="1"
                     android:text="Drained"
                     android:textColor="@color/mind_text_secondary"
-                    android:textSize="11sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -140,7 +112,8 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="6dp">
+                android:paddingHorizontal="2dp"
+                android:paddingVertical="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -150,12 +123,14 @@
 
                 <TextView
                     android:id="@+id/tv_mood_name_2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:maxLines="1"
                     android:text="Low"
                     android:textColor="@color/mind_text_secondary"
-                    android:textSize="11sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -170,7 +145,8 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="6dp">
+                android:paddingHorizontal="2dp"
+                android:paddingVertical="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -180,12 +156,14 @@
 
                 <TextView
                     android:id="@+id/tv_mood_name_3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:maxLines="1"
                     android:text="Balanced"
                     android:textColor="@color/mind_text_secondary"
-                    android:textSize="11sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -200,7 +178,8 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="6dp">
+                android:paddingHorizontal="2dp"
+                android:paddingVertical="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -210,12 +189,14 @@
 
                 <TextView
                     android:id="@+id/tv_mood_name_4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:maxLines="1"
                     android:text="Good"
                     android:textColor="@color/mind_primary_accent"
-                    android:textSize="11sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -230,7 +211,8 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="6dp">
+                android:paddingHorizontal="2dp"
+                android:paddingVertical="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -240,12 +222,14 @@
 
                 <TextView
                     android:id="@+id/tv_mood_name_5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:maxLines="1"
                     android:text="Thriving"
                     android:textColor="@color/mind_text_secondary"
-                    android:textSize="11sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
@@ -392,7 +376,7 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <View
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1" />
