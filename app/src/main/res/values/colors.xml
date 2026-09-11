@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 60-30-10 Color System for MindScape Rich Notifications -->
+    
+    <!-- 60% Background Base -->
+    <color name="mind_background">#F8F9FB</color>
+    <color name="mind_subtle_container">#F3F4F8</color>
+    
+    <!-- 30% Structural Cards & Borders -->
+    <color name="mind_card_surface">#FFFFFF</color>
+    <color name="mind_border">#E5E7EB</color>
+    <color name="mind_track_bg">#E5E7EB</color>
+    
+    <!-- 10% Accents & Interactive Elements -->
+    <color name="mind_primary_accent">#5B4DFB</color>
+    <color name="mind_primary_accent_light">#EAE6FF</color>
+    <color name="mind_lime_accent">#D8F295</color>
+    <color name="mind_lime_accent_dark">#3F6212</color>
+    
+    <!-- Text Colors -->
+    <color name="mind_text_primary">#1E1B2E</color>
+    <color name="mind_text_secondary">#6B7280</color>
+    <color name="mind_text_muted">#9CA3AF</color>
+    <color name="mind_white">#FFFFFF</color>
+</resources>
