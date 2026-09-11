@@ -72,12 +72,12 @@ class SmartAdaptationEngine(
             return when (predictedClass) {
                 HabitAdaptationEngine.CLASS_LIGHT -> {
                     val downscaled = max(1, (original * 0.33f).toInt())
-                    val reason = "Smart ML Adaptation: Reduced to $downscaled ${habit.targetUnit} based on your ${checkIn.moodLabel} mood and ${energy.displayName} energy."
+                    val reason = "Smart Adaptation: Reduced to $downscaled ${habit.targetUnit} based on your ${checkIn.moodLabel} mood and ${energy.displayName} energy."
                     Triple(downscaled, downscaled < original, reason)
                 }
                 HabitAdaptationEngine.CLASS_MODERATE -> {
                     val downscaled = max(1, (original * 0.5f).toInt())
-                    val reason = "Smart ML Adaptation: Adjusted to $downscaled ${habit.targetUnit} to match your daily capacity."
+                    val reason = "Smart Adaptation: Adjusted to $downscaled ${habit.targetUnit} to match your daily capacity."
                     Triple(downscaled, downscaled < original, reason)
                 }
                 else -> {

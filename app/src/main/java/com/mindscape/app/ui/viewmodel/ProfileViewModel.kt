@@ -37,6 +37,28 @@ class ProfileViewModel(
         }
     }
 
+    fun updateCheckInTime(newTime: String) {
+        viewModelScope.launch {
+            val updated = _userProfile.value.copy(checkInTime = newTime)
+            userProfileRepository.updateProfile(updated)
+            _userProfile.value = updated
+        }
+    }
+
+    fun signOut(onComplete: () -> Unit) {
+        viewModelScope.launch {
+            userProfileRepository.updateProfile(
+                UserProfile(
+                    id = 1,
+                    userName = "",
+                    email = "",
+                    isOnboardingCompleted = false
+                )
+            )
+            onComplete()
+        }
+    }
+
     class Factory(
         private val userProfileRepository: UserProfileRepository
     ) : ViewModelProvider.Factory {

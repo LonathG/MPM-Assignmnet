@@ -20,6 +20,7 @@ import com.mindscape.app.data.repository.HabitRepositoryImpl
 import com.mindscape.app.data.repository.UserProfileRepositoryImpl
 import com.mindscape.app.domain.engine.HabitAdaptationEngine
 import com.mindscape.app.domain.engine.SmartAdaptationEngine
+import com.mindscape.app.domain.engine.SmartRoutineEngine
 import com.mindscape.app.domain.usecase.GetAnalyticsUseCase
 import com.mindscape.app.domain.usecase.ManageHabitsUseCase
 import com.mindscape.app.domain.usecase.PerformCheckInUseCase
@@ -45,9 +46,10 @@ class MainActivity : ComponentActivity() {
         val checkInRepository = CheckInRepositoryImpl(database.dailyCheckInDao())
         val userProfileRepository = UserProfileRepositoryImpl(database.userProfileDao())
 
-        // Initialize ML Engine & Domain Use Cases
+        // Initialize ML Engine & Domain Engines / Use Cases
         val mlEngine = HabitAdaptationEngine(applicationContext)
         val smartAdaptationEngine = SmartAdaptationEngine(mlEngine)
+        val smartRoutineEngine = SmartRoutineEngine(database.habitDao())
         val manageHabitsUseCase = ManageHabitsUseCase(habitRepository)
         val performCheckInUseCase = PerformCheckInUseCase(
             checkInRepository = checkInRepository,
@@ -63,13 +65,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             MindScapeTheme {
                 val navController = rememberNavController()
+                val profileState by userProfileRepository.getUserProfile().collectAsState(initial = null)
 
                 // ViewModels
                 val homeViewModel: HomeViewModel = viewModel(
                     factory = HomeViewModel.Factory(manageHabitsUseCase, checkInRepository, userProfileRepository)
                 )
                 val habitViewModel: HabitViewModel = viewModel(
-                    factory = HabitViewModel.Factory(manageHabitsUseCase)
+                    factory = HabitViewModel.Factory(manageHabitsUseCase, smartRoutineEngine)
                 )
                 val checkInViewModel: CheckInViewModel = viewModel(
                     factory = CheckInViewModel.Factory(performCheckInUseCase)
@@ -93,6 +96,16 @@ class MainActivity : ComponentActivity() {
                     "analytics" -> NavTab.ANALYTICS
                     "profile" -> NavTab.PROFILE
                     else -> NavTab.HOME
+                }
+
+                // If user has not completed onboarding, navigate to onboarding screen
+                LaunchedEffect(profileState?.isOnboardingCompleted) {
+                    val completed = profileState?.isOnboardingCompleted
+                    if (completed == false && currentRoute != "onboarding") {
+                        navController.navigate("onboarding") {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
                 }
 
                 val showBottomBar = currentRoute in listOf("home", "habits", "analytics", "profile")
@@ -131,6 +144,16 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = "home"
                         ) {
+                            composable("onboarding") {
+                                OnboardingScreen(
+                                    viewModel = onboardingViewModel,
+                                    onFinishOnboarding = {
+                                        navController.navigate("home") {
+                                            popUpTo("onboarding") { inclusive = true }
+                                        }
+                                    }
+                                )
+                            }
                             composable("home") {
                                 HomeScreen(
                                     viewModel = homeViewModel,
@@ -154,23 +177,19 @@ class MainActivity : ComponentActivity() {
                                 ProfileScreen(
                                     viewModel = profileViewModel,
                                     onNavigateBack = { navController.popBackStack() },
-                                    onSignOut = { navController.navigate("onboarding") }
+                                    onSignOut = {
+                                        profileViewModel.signOut {
+                                            navController.navigate("onboarding") {
+                                                popUpTo(0) { inclusive = true }
+                                            }
+                                        }
+                                    }
                                 )
                             }
                             composable("checkin") {
                                 CheckInScreen(
                                     viewModel = checkInViewModel,
                                     onNavigateToHome = { navController.navigate("home") }
-                                )
-                            }
-                            composable("onboarding") {
-                                OnboardingScreen(
-                                    viewModel = onboardingViewModel,
-                                    onFinishOnboarding = {
-                                        navController.navigate("home") {
-                                            popUpTo("onboarding") { inclusive = true }
-                                        }
-                                    }
                                 )
                             }
                         }

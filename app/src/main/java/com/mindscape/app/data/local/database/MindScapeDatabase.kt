@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
         HabitLogEntity::class,
         UserProfileEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class MindScapeDatabase : RoomDatabase() {
@@ -66,70 +66,77 @@ abstract class MindScapeDatabase : RoomDatabase() {
             }
 
             private suspend fun populateInitialData(database: MindScapeDatabase) {
-                // Initial Starter Habits
+                // Evidence-Based Initial Starter Habits (Clinical & Behavioral Neuroscience Grounded)
                 val initialHabits = listOf(
                     HabitEntity(
                         id = 1,
-                        name = "Drink 8 glasses of water",
+                        name = "Daily Mind-Body Hydration",
                         category = "Wellness",
                         frequency = "Daily",
                         targetValue = 8,
                         targetUnit = "glasses",
                         currentValue = 8,
                         isCompleted = true,
+                        adaptationReason = "Armstrong et al. (2012): Hydration sustains cognitive stamina and positive mood.",
                         isStarter = true
                     ),
                     HabitEntity(
                         id = 2,
-                        name = "Take a 30 min mindful walk",
+                        name = "Morning Sunlight & 20-min Walk",
                         category = "Movement",
                         frequency = "Daily",
-                        targetValue = 30,
+                        targetValue = 20,
                         targetUnit = "mins",
                         currentValue = 0,
                         isCompleted = false,
-                        originalTargetValue = 30,
+                        originalTargetValue = 20,
+                        adaptationReason = "Stanford Neuroscience (2021): Early light sets circadian rhythm and enhances daytime focus.",
                         isStarter = true
                     ),
                     HabitEntity(
                         id = 3,
-                        name = "Read 10 pages",
-                        category = "Learning",
+                        name = "Box Breathing & Vagal Reset",
+                        category = "Mindfulness",
                         frequency = "Daily",
-                        targetValue = 10,
-                        targetUnit = "pages",
+                        targetValue = 5,
+                        targetUnit = "mins",
                         currentValue = 0,
                         isCompleted = false,
+                        originalTargetValue = 5,
+                        adaptationReason = "Balban et al. (2023): Cyclic box breathing rapidly engages the parasympathetic calming response.",
                         isStarter = true
                     ),
                     HabitEntity(
                         id = 4,
-                        name = "Morning Meditation",
-                        category = "Mindfulness",
+                        name = "25-Min Deep Focus Sprint",
+                        category = "Learning",
                         frequency = "Daily",
-                        targetValue = 15,
+                        targetValue = 25,
                         targetUnit = "mins",
-                        currentValue = 9,
+                        currentValue = 0,
                         isCompleted = false,
+                        originalTargetValue = 25,
+                        adaptationReason = "Deliberate Practice Protocol (Ericsson, 1993): Structured sprints optimize working memory without burnout.",
                         isStarter = true
                     )
                 )
                 database.habitDao().insertHabits(initialHabits)
 
-                // Initial Profile
+                // Initial Profile (Onboarding not yet completed for new users)
                 database.userProfileDao().insertOrUpdateProfile(
                     UserProfileEntity(
                         id = 1,
-                        userName = "Lonath G",
-                        email = "lonath@example.com",
+                        userName = "",
+                        email = "",
                         primaryFocus = "Mindfulness",
                         checkInTime = "08:30 AM",
                         checkInFrequency = "Everyday",
                         smartAdaptiveGoalsEnabled = true,
-                        streakDays = 14,
-                        consistencyPercentage = 85,
-                        completedSessions = 42,
-                        level = 3
+                        isOnboardingCompleted = false,
+                        streakDays = 0,
+                        consistencyPercentage = 100,
+                        completedSessions = 0,
+                        level = 1
                     )
                 )
             }

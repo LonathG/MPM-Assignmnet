@@ -74,9 +74,9 @@ fun BottomNavBar(
                 // Spacer for Center Floating FAB
                 Spacer(modifier = Modifier.width(48.dp))
 
-                // Analytics Tab
+                // Analytics / Insights Tab
                 NavBarItem(
-                    icon = if (currentTab == NavTab.ANALYTICS) Icons.Default.AutoAwesome else Icons.Outlined.AutoAwesome,
+                    icon = if (currentTab == NavTab.ANALYTICS) Icons.Default.Insights else Icons.Outlined.Insights,
                     isSelected = currentTab == NavTab.ANALYTICS,
                     onClick = { onTabSelected(NavTab.ANALYTICS) }
                 )

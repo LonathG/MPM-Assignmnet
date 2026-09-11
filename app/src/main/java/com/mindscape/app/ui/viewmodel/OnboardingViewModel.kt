@@ -60,11 +60,18 @@ class OnboardingViewModel(
     fun completeOnboarding(onFinish: () -> Unit) {
         val state = _uiState.value
         val profile = UserProfile(
-            userName = state.name.ifEmpty { "Lonath G" },
-            email = state.email.ifEmpty { "lonath@example.com" },
+            id = 1,
+            userName = state.name.ifBlank { "User" },
+            email = state.email.ifBlank { "user@mindscape.local" },
             primaryFocus = state.primaryFocus,
             checkInTime = state.checkInTime,
-            checkInFrequency = state.checkInFrequency
+            checkInFrequency = state.checkInFrequency,
+            smartAdaptiveGoalsEnabled = true,
+            isOnboardingCompleted = true,
+            streakDays = 1,
+            consistencyPercentage = 100,
+            completedSessions = 0,
+            level = 1
         )
 
         viewModelScope.launch {

@@ -227,12 +227,37 @@ fun CalendarDayItem(
     onSelect: () -> Unit
 ) {
     val isSelected = day.isSelected
+    val isPast = day.isPast
+
+    // Background color: Selected -> Primary Purple, Past -> Light subtle Gray, Today/Future -> Card Surface
+    val backgroundColor = when {
+        isSelected -> MindPrimaryAccent
+        isPast -> Color(0xFFF1F3F5)
+        else -> MindCardSurface
+    }
+
+    // Day name label color
+    val dayNameColor = when {
+        isSelected -> Color.White.copy(alpha = 0.85f)
+        isPast -> Color(0xFFA0A7B1)
+        day.isToday -> MindPrimaryAccent
+        else -> MindTextSecondary
+    }
+
+    // Day number text color
+    val dayNumberColor = when {
+        isSelected -> Color.White
+        isPast -> Color(0xFF8E95A2)
+        day.isToday -> MindPrimaryAccent
+        else -> MindTextPrimary
+    }
+
     Box(
         modifier = Modifier
             .width(64.dp)
             .height(84.dp)
             .clip(RoundedCornerShape(32.dp))
-            .background(if (isSelected) MindPrimaryAccent else MindCardSurface)
+            .background(backgroundColor)
             .clickable { onSelect() }
             .padding(vertical = 12.dp),
         contentAlignment = Alignment.Center
@@ -244,13 +269,14 @@ fun CalendarDayItem(
             Text(
                 text = day.dayName,
                 style = MaterialTheme.typography.labelMedium,
-                color = if (isSelected) Color.White.copy(alpha = 0.8f) else MindTextMuted
+                color = dayNameColor,
+                fontWeight = if (day.isToday && !isSelected) FontWeight.Bold else FontWeight.Medium
             )
             Text(
                 text = day.dayNumber.toString(),
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = if (isSelected) Color.White else MindTextPrimary
+                fontWeight = if (isSelected || day.isToday) FontWeight.ExtraBold else FontWeight.Bold,
+                color = dayNumberColor
             )
         }
     }

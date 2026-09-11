@@ -3,6 +3,9 @@ package com.mindscape.app.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.mindscape.app.domain.engine.RoutineGenerationResult
+import com.mindscape.app.domain.engine.RoutineIntent
+import com.mindscape.app.domain.engine.SmartRoutineEngine
 import com.mindscape.app.domain.model.Habit
 import com.mindscape.app.domain.model.HabitCategory
 import com.mindscape.app.domain.usecase.ManageHabitsUseCase
@@ -21,11 +24,19 @@ data class HabitsUiState(
     val selectedFrequency: String = "Daily",
     val editingHabit: Habit? = null,
     val isLoading: Boolean = false,
-    val weeklyConsistencyPercentage: Int = 82
+    val weeklyConsistencyPercentage: Int = 82,
+    // Smart Routine Generator State
+    val isSmartRoutineDialogOpen: Boolean = false,
+    val smartRoutinePrompt: String = "",
+    val detectedIntent: RoutineIntent? = null,
+    val isGeneratingRoutine: Boolean = false,
+    val lastGeneratedResult: RoutineGenerationResult? = null,
+    val smartRoutineError: String? = null
 )
 
 class HabitViewModel(
-    private val manageHabitsUseCase: ManageHabitsUseCase
+    private val manageHabitsUseCase: ManageHabitsUseCase,
+    private val smartRoutineEngine: SmartRoutineEngine
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HabitsUiState())
@@ -132,12 +143,75 @@ class HabitViewModel(
         }
     }
 
+    // --- Smart Routine Generator Controls ---
+
+    fun openSmartRoutineDialog() {
+        _uiState.value = _uiState.value.copy(
+            isSmartRoutineDialogOpen = true,
+            smartRoutineError = null,
+            lastGeneratedResult = null
+        )
+    }
+
+    fun dismissSmartRoutineDialog() {
+        _uiState.value = _uiState.value.copy(
+            isSmartRoutineDialogOpen = false,
+            smartRoutineError = null
+        )
+    }
+
+    fun onSmartRoutinePromptChange(prompt: String) {
+        val detected = if (prompt.isNotBlank()) smartRoutineEngine.detectIntent(prompt) else null
+        _uiState.value = _uiState.value.copy(
+            smartRoutinePrompt = prompt,
+            detectedIntent = detected,
+            smartRoutineError = null
+        )
+    }
+
+    fun generateSmartRoutine(promptOverride: String? = null) {
+        val prompt = (promptOverride ?: _uiState.value.smartRoutinePrompt).trim()
+        if (prompt.isEmpty()) {
+            _uiState.value = _uiState.value.copy(
+                smartRoutineError = "Please describe what routine you'd like (e.g., 'Routine for low energy')."
+            )
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isGeneratingRoutine = true,
+                smartRoutineError = null
+            )
+            try {
+                // Calls engine to analyze heuristics & insert into Room DB
+                val result = smartRoutineEngine.generateAndSaveRoutine(prompt)
+                _uiState.value = _uiState.value.copy(
+                    isGeneratingRoutine = false,
+                    lastGeneratedResult = result,
+                    smartRoutinePrompt = "",
+                    detectedIntent = result.intent
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isGeneratingRoutine = false,
+                    smartRoutineError = "Error creating routine: ${e.localizedMessage ?: "Unknown error"}"
+                )
+            }
+        }
+    }
+
+    fun clearLastGeneratedResult() {
+        _uiState.value = _uiState.value.copy(lastGeneratedResult = null)
+    }
+
     class Factory(
-        private val manageHabitsUseCase: ManageHabitsUseCase
+        private val manageHabitsUseCase: ManageHabitsUseCase,
+        private val smartRoutineEngine: SmartRoutineEngine
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HabitViewModel(manageHabitsUseCase) as T
+            return HabitViewModel(manageHabitsUseCase, smartRoutineEngine) as T
         }
     }
 }

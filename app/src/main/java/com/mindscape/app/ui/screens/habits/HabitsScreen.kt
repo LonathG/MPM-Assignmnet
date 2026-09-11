@@ -17,6 +17,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,192 +36,107 @@ fun HabitsScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    LazyColumn(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MindBackground)
-            .padding(horizontal = 20.dp),
-        contentPadding = PaddingValues(top = 24.dp, bottom = 100.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        // Top Title & Header
-        item {
-            Column {
-                Text(
-                    text = "Your Habits",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MindTextPrimary
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Cultivate focus and tranquility through gentle consistency.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MindTextSecondary
-                )
-            }
-        }
-
-        // Card 1: Cultivate a New Habit Form
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = MindCardSurface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+            contentPadding = PaddingValues(top = 24.dp, bottom = 120.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            // Top Title & Header
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Header row
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Your Habits",
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = MindTextPrimary
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Cultivate focus and tranquility through gentle consistency.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MindTextSecondary
+                        )
+                    }
+
+                    // Smart Routine Quick Trigger Button in Top Header
+                    IconButton(
+                        onClick = viewModel::openSmartRoutineDialog,
+                        modifier = Modifier
+                            .size(46.dp)
+                            .shadow(elevation = 4.dp, shape = CircleShape)
+                            .clip(CircleShape)
+                            .background(MindPrimaryAccentLight)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(36.dp)
-                                .clip(CircleShape)
-                                .background(MindLimeAccent),
-                            contentAlignment = Alignment.Center
+                        Icon(
+                            imageVector = Icons.Default.AutoAwesome,
+                            contentDescription = "Smart Routine AI",
+                            tint = MindPrimaryAccent,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
+
+            // Card 1: Cultivate a New Habit Form
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = MindCardSurface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Header row
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Eco,
-                                contentDescription = null,
-                                tint = MindLimeAccentDark,
-                                modifier = Modifier.size(20.dp)
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(MindLimeAccent),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Eco,
+                                    contentDescription = null,
+                                    tint = MindLimeAccentDark,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Text(
+                                text = "Cultivate a New Habit",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold
                             )
                         }
-                        Text(
-                            text = "Cultivate a New Habit",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
 
-                    // Habit Name Input Field
-                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text(
-                            text = "Habit Name",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MindTextPrimary
-                        )
-                        OutlinedTextField(
-                            value = state.newHabitName,
-                            onValueChange = viewModel::onNameChange,
-                            placeholder = { Text("e.g., Morning Journaling", color = MindTextMuted) },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedContainerColor = MindInputBackground,
-                                unfocusedContainerColor = MindInputBackground,
-                                focusedBorderColor = MindPrimaryAccent,
-                                unfocusedBorderColor = Color.Transparent
-                            ),
-                            singleLine = true
-                        )
-                    }
-
-                    // Category Selector Pills
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            text = "Category",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MindTextPrimary
-                        )
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            items(HabitCategory.entries) { category ->
-                                val isSelected = category == state.selectedCategory
-                                Box(
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(20.dp))
-                                        .background(if (isSelected) MindPrimaryAccent else MindSubtleContainer)
-                                        .clickable { viewModel.onCategorySelect(category) }
-                                        .padding(horizontal = 16.dp, vertical = 10.dp)
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                    ) {
-                                        val icon = when (category) {
-                                            HabitCategory.MINDFULNESS -> Icons.Default.SelfImprovement
-                                            HabitCategory.MOVEMENT -> Icons.Default.DirectionsWalk
-                                            HabitCategory.WELLNESS -> Icons.Default.WaterDrop
-                                            HabitCategory.LEARNING -> Icons.Default.MenuBook
-                                        }
-                                        Icon(
-                                            imageVector = icon,
-                                            contentDescription = null,
-                                            tint = if (isSelected) Color.White else MindTextSecondary,
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(
-                                            text = category.displayName,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) Color.White else MindTextPrimary
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Frequency & Target Row
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text("Frequency", style = MaterialTheme.typography.labelLarge)
-                            var expanded by remember { mutableStateOf(false) }
-                            ExposedDropdownMenuBox(
-                                expanded = expanded,
-                                onExpandedChange = { expanded = !expanded }
-                            ) {
-                                OutlinedTextField(
-                                    value = state.selectedFrequency,
-                                    onValueChange = {},
-                                    readOnly = true,
-                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                                    modifier = Modifier.menuAnchor(),
-                                    shape = RoundedCornerShape(16.dp),
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        focusedContainerColor = MindInputBackground,
-                                        unfocusedContainerColor = MindInputBackground,
-                                        focusedBorderColor = MindPrimaryAccent,
-                                        unfocusedBorderColor = Color.Transparent
-                                    )
-                                )
-                                ExposedDropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    listOf("Daily", "Weekdays Only", "Custom").forEach { freq ->
-                                        DropdownMenuItem(
-                                            text = { Text(freq) },
-                                            onClick = {
-                                                viewModel.onFrequencySelect(freq)
-                                                expanded = false
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text("Target Goal", style = MaterialTheme.typography.labelLarge)
+                        // Habit Name Input Field
+                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(
+                                text = "Habit Name",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MindTextPrimary
+                            )
                             OutlinedTextField(
-                                value = state.targetValueText,
-                                onValueChange = viewModel::onTargetValueChange,
-                                placeholder = { Text("15") },
+                                value = state.newHabitName,
+                                onValueChange = viewModel::onNameChange,
+                                placeholder = { Text("e.g., Morning Journaling", color = MindTextMuted) },
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(16.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
@@ -231,135 +148,290 @@ fun HabitsScreen(
                                 singleLine = true
                             )
                         }
-                    }
 
-                    // Add Habit Button
-                    Button(
-                        onClick = viewModel::addHabit,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        shape = RoundedCornerShape(26.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MindPrimaryAccent)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Add Habit",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.White
-                        )
+                        // Category Selector Pills
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                text = "Category",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MindTextPrimary
+                            )
+                            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                items(HabitCategory.entries) { category ->
+                                    val isSelected = category == state.selectedCategory
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(20.dp))
+                                            .background(if (isSelected) MindPrimaryAccent else MindSubtleContainer)
+                                            .clickable { viewModel.onCategorySelect(category) }
+                                            .padding(horizontal = 16.dp, vertical = 10.dp)
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                        ) {
+                                            val icon = when (category) {
+                                                HabitCategory.MINDFULNESS -> Icons.Default.SelfImprovement
+                                                HabitCategory.MOVEMENT -> Icons.Default.DirectionsWalk
+                                                HabitCategory.WELLNESS -> Icons.Default.WaterDrop
+                                                HabitCategory.LEARNING -> Icons.Default.MenuBook
+                                            }
+                                            Icon(
+                                                imageVector = icon,
+                                                contentDescription = null,
+                                                tint = if (isSelected) Color.White else MindTextSecondary,
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Text(
+                                                text = category.displayName,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                                color = if (isSelected) Color.White else MindTextPrimary
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Frequency & Target Row
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text("Frequency", style = MaterialTheme.typography.labelLarge)
+                                var expanded by remember { mutableStateOf(false) }
+                                ExposedDropdownMenuBox(
+                                    expanded = expanded,
+                                    onExpandedChange = { expanded = !expanded }
+                                ) {
+                                    OutlinedTextField(
+                                        value = state.selectedFrequency,
+                                        onValueChange = {},
+                                        readOnly = true,
+                                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                        modifier = Modifier.menuAnchor(),
+                                        shape = RoundedCornerShape(16.dp),
+                                        colors = OutlinedTextFieldDefaults.colors(
+                                            focusedContainerColor = MindInputBackground,
+                                            unfocusedContainerColor = MindInputBackground,
+                                            focusedBorderColor = MindPrimaryAccent,
+                                            unfocusedBorderColor = Color.Transparent
+                                        )
+                                    )
+                                    ExposedDropdownMenu(
+                                        expanded = expanded,
+                                        onDismissRequest = { expanded = false }
+                                    ) {
+                                        listOf("Daily", "Weekdays Only", "Custom").forEach { freq ->
+                                            DropdownMenuItem(
+                                                text = { Text(freq) },
+                                                onClick = {
+                                                    viewModel.onFrequencySelect(freq)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text("Target Goal", style = MaterialTheme.typography.labelLarge)
+                                OutlinedTextField(
+                                    value = state.targetValueText,
+                                    onValueChange = viewModel::onTargetValueChange,
+                                    placeholder = { Text("15") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedContainerColor = MindInputBackground,
+                                        unfocusedContainerColor = MindInputBackground,
+                                        focusedBorderColor = MindPrimaryAccent,
+                                        unfocusedBorderColor = Color.Transparent
+                                    ),
+                                    singleLine = true
+                                )
+                            }
+                        }
+
+                        // Add Habit Button
+                        Button(
+                            onClick = viewModel::addHabit,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            shape = RoundedCornerShape(26.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = MindPrimaryAccent)
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Add Habit",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.White
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        // Card 2: Weekly Consistency Stats Banner
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = MindCardSurface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
+            // Card 2: Weekly Consistency Stats Banner
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = MindCardSurface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = "Weekly Consistency",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MindTextSecondary
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "${state.weeklyConsistencyPercentage}%",
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = MindPrimaryAccent,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(MindPrimaryAccentLight),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocalFireDepartment,
+                                contentDescription = null,
+                                tint = MindPrimaryAccent,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Section Title: Current Focus
+            item {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
-                        Text(
-                            text = "Weekly Consistency",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MindTextSecondary
+                    Text(
+                        text = "Current Focus",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    TextTextButton(text = "Smart Generator", onClick = viewModel::openSmartRoutineDialog)
+                }
+            }
+
+            // Habit Cards List
+            items(state.habits) { habit ->
+                HabitItemCard(
+                    habit = habit,
+                    onToggleComplete = { viewModel.toggleHabitCompletion(habit) },
+                    onIncrement = { viewModel.incrementHabit(habit) },
+                    onEdit = { viewModel.startEditingHabit(habit) },
+                    onDelete = { viewModel.deleteHabit(habit) }
+                )
+            }
+
+            // Dotted Add Another Focus Area Card
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp))
+                        .border(
+                            width = 1.5.dp,
+                            color = MindBorderColor,
+                            shape = RoundedCornerShape(20.dp)
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "${state.weeklyConsistencyPercentage}%",
-                            style = MaterialTheme.typography.headlineLarge,
-                            color = MindPrimaryAccent,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .background(MindPrimaryAccentLight),
-                        contentAlignment = Alignment.Center
+                        .clickable { viewModel.openSmartRoutineDialog() }
+                        .padding(vertical = 20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.LocalFireDepartment,
+                            imageVector = Icons.Default.AutoAwesome,
                             contentDescription = null,
-                            tint = MindPrimaryAccent,
-                            modifier = Modifier.size(28.dp)
+                            tint = MindPrimaryAccent
+                        )
+                        Text(
+                            text = "Generate Routine with AI Heuristics",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MindPrimaryAccent,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                 }
             }
         }
 
-        // Section Title: Current Focus
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Current Focus",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+        // --- SEPARATE FLOATING ACTION BUTTON FOR SMART ROUTINE GENERATOR ---
+        ExtendedFloatingActionButton(
+            onClick = viewModel::openSmartRoutineDialog,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 20.dp, bottom = 24.dp)
+                .shadow(elevation = 10.dp, shape = RoundedCornerShape(28.dp)),
+            containerColor = MindPrimaryAccent,
+            contentColor = Color.White,
+            shape = RoundedCornerShape(28.dp),
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.AutoAwesome,
+                    contentDescription = "Smart Routine",
+                    tint = Color.White
                 )
-                TextTextButton(text = "View All", onClick = {})
+            },
+            text = {
+                Text(
+                    text = "Smart Routine",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp
+                )
             }
-        }
-
-        // Habit Cards List
-        items(state.habits) { habit ->
-            HabitItemCard(
-                habit = habit,
-                onToggleComplete = { viewModel.toggleHabitCompletion(habit) },
-                onIncrement = { viewModel.incrementHabit(habit) },
-                onEdit = { viewModel.startEditingHabit(habit) },
-                onDelete = { viewModel.deleteHabit(habit) }
-            )
-        }
-
-        // Dotted Add Another Focus Area Card
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp))
-                    .border(
-                        width = 1.5.dp,
-                        color = MindBorderColor,
-                        shape = RoundedCornerShape(20.dp)
-                    )
-                    .clickable { /* focus input above */ }
-                    .padding(vertical = 20.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        tint = MindTextMuted
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Add another focus area",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MindTextMuted,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
-        }
+        )
     }
+
+    // Smart Routine Generator Modal Dialog
+    SmartRoutineDialog(
+        isOpen = state.isSmartRoutineDialogOpen,
+        promptText = state.smartRoutinePrompt,
+        detectedIntent = state.detectedIntent,
+        isGenerating = state.isGeneratingRoutine,
+        lastResult = state.lastGeneratedResult,
+        errorMessage = state.smartRoutineError,
+        onPromptChange = viewModel::onSmartRoutinePromptChange,
+        onGenerate = { prompt -> viewModel.generateSmartRoutine(prompt) },
+        onDismiss = viewModel::dismissSmartRoutineDialog,
+        onClearResult = viewModel::clearLastGeneratedResult
+    )
 
     // Edit Modal Dialog if active
     state.editingHabit?.let { editing ->

@@ -1,6 +1,8 @@
 package com.mindscape.app.ui.screens.onboarding
 
+import android.app.TimePickerDialog
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,12 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mindscape.app.ui.theme.*
 import com.mindscape.app.ui.viewmodel.OnboardingViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -29,6 +34,40 @@ fun OnboardingScreen(
     onFinishOnboarding: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    // Helper to launch native interactive Time Picker dialog
+    fun openTimePicker(currentTimeString: String, onTimeSelected: (String) -> Unit) {
+        var hour = 8
+        var minute = 30
+        try {
+            val format = SimpleDateFormat("hh:mm a", Locale.US)
+            val date = format.parse(currentTimeString)
+            if (date != null) {
+                val cal = Calendar.getInstance().apply { time = date }
+                hour = cal.get(Calendar.HOUR_OF_DAY)
+                minute = cal.get(Calendar.MINUTE)
+            }
+        } catch (e: Exception) {
+            // fallback to 8:30 AM
+        }
+
+        TimePickerDialog(
+            context,
+            { _, selectedHour, selectedMinute ->
+                val cal = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, selectedHour)
+                    set(Calendar.MINUTE, selectedMinute)
+                }
+                val formatter = SimpleDateFormat("hh:mm a", Locale.US)
+                val formatted = formatter.format(cal.time)
+                onTimeSelected(formatted)
+            },
+            hour,
+            minute,
+            false // 12-hour AM/PM format
+        ).show()
+    }
 
     Column(
         modifier = Modifier
@@ -221,23 +260,62 @@ fun OnboardingScreen(
 
                     Text("Daily Check-In Time", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
 
+                    // Editable Time Picker Card / Row
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
                             .background(MindSubtleContainer)
+                            .clickable {
+                                openTimePicker(state.checkInTime) { newTime ->
+                                    viewModel.onTimeChange(newTime)
+                                }
+                            }
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Time", style = MaterialTheme.typography.bodyLarge)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Schedule,
+                                contentDescription = null,
+                                tint = MindPrimaryAccent,
+                                modifier = Modifier.size(22.dp)
+                            )
+                            Text(
+                                text = "Time (Tap to edit)",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(16.dp))
                                 .background(Color.White)
+                                .border(1.dp, MindBorderColor, RoundedCornerShape(16.dp))
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         ) {
-                            Text(state.checkInTime, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = state.checkInTime,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MindPrimaryAccent
+                                )
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Edit Time",
+                                    tint = MindTextMuted,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                            }
                         }
                     }
 

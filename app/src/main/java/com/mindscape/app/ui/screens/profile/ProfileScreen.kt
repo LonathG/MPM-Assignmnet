@@ -32,6 +32,7 @@ fun ProfileScreen(
     onSignOut: () -> Unit = {}
 ) {
     val profile by viewModel.userProfile.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     LazyColumn(
         modifier = Modifier
@@ -171,12 +172,42 @@ fun ProfileScreen(
                         fontWeight = FontWeight.Bold
                     )
 
-                    // Morning Check-In Row
+                    // Morning Check-In Row (Tap to Edit)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(16.dp))
                             .background(MindSubtleContainer)
+                            .clickable {
+                                var hour = 8
+                                var minute = 30
+                                try {
+                                    val format = java.text.SimpleDateFormat("hh:mm a", java.util.Locale.US)
+                                    val date = format.parse(profile.checkInTime)
+                                    if (date != null) {
+                                        val cal = java.util.Calendar.getInstance().apply { time = date }
+                                        hour = cal.get(java.util.Calendar.HOUR_OF_DAY)
+                                        minute = cal.get(java.util.Calendar.MINUTE)
+                                    }
+                                } catch (e: Exception) {
+                                    // fallback
+                                }
+
+                                android.app.TimePickerDialog(
+                                    context,
+                                    { _, selectedHour, selectedMinute ->
+                                        val cal = java.util.Calendar.getInstance().apply {
+                                            set(java.util.Calendar.HOUR_OF_DAY, selectedHour)
+                                            set(java.util.Calendar.MINUTE, selectedMinute)
+                                        }
+                                        val formatter = java.text.SimpleDateFormat("hh:mm a", java.util.Locale.US)
+                                        viewModel.updateCheckInTime(formatter.format(cal.time))
+                                    },
+                                    hour,
+                                    minute,
+                                    false
+                                ).show()
+                            }
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -197,11 +228,11 @@ fun ProfileScreen(
 
                             Column {
                                 Text("Morning Check-In", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                                Text(profile.checkInTime, style = MaterialTheme.typography.bodyMedium, color = MindTextSecondary)
+                                Text(profile.checkInTime, style = MaterialTheme.typography.bodyMedium, color = MindPrimaryAccent, fontWeight = FontWeight.SemiBold)
                             }
                         }
 
-                        Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MindTextMuted)
+                        Icon(Icons.Default.Edit, contentDescription = "Edit Time", tint = MindTextMuted, modifier = Modifier.size(18.dp))
                     }
 
                     // Smart Adaptive Goals Toggle Row
